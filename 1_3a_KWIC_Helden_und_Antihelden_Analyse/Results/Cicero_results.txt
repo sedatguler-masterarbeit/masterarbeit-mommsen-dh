@@ -1,0 +1,48 @@
+=== Cicero ===
+
+Top Adjektive:
+schillernd: 1
+beschlossen: 1
+antimonarchisch: 1
+ausgegangen: 1
+namhaftesten: 1
+befreundet: 1
+durchgeführter: 1
+cavalierem: 1
+
+Top Verben:
+werden: 2
+lassen: 2
+geb: 1
+fahren: 1
+sprengen: 1
+nehmen: 1
+beweisen: 1
+übersandt: 1
+verlieh: 1
+gerichten: 1
+rücken: 1
+tun: 1
+bedienen: 1
+ausweisen: 1
+umschlagen: 1
+
+Top Substantive:
+Regierung: 1
+Hauptstadt: 1
+Wahlschlacht: 1
+Nacht: 1
+Verschworenen: 1
+Volksversammlung: 1
+Stier: 1
+Spiel: 1
+Verbrechen: 1
+Catilinarische: 1
+Gaue: 1
+Vorschlag: 1
+Formfehler: 1
+machen: 1
+Lage: 1
+
+Positiv konnotierte Wörter: 0
+Negativ konnotierte Wörter: 0
