@@ -1,8 +1,8 @@
 If you try to replicate my runs, you may need to adapt the path names i used on my local machine.
 My local folder structure and the sequence i executed the python scripts is as follows:
 
-extraction of Mommsens text from zeno.org and postprocessing to get rid of umlauts etc
-as result, the Mommsens extracts are available as one file per book and in addition, more fine granular, as one .txt file per chapter
+# extraction of Mommsens text from zeno.org and postprocessing to get rid of umlauts etc
+# as result, the Mommsens extracts are available as one file per book and in addition, more fine granular, as one .txt file per chapter
 C:\Mommsen_DH\Prep_a_Extraktion_Mommsen_nach_Buch,   files: mommsen_import_band1.buch1_zeno.py to mommsen_import_band3.buch5_zeno.py
 C:\Mommsen_DH\Prep_b_Postprocessing_Mommsen_Extrakt, files: merge_texts.py, Postprocessing_entfernen_seitenzahlen_buchbesprechung.py
 
