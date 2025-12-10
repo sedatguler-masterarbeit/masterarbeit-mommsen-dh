@@ -1,0 +1,110 @@
+# =======================================
+# Mommsen – Stilistische Indikatoren (Kapitel-Ebene)
+# =======================================
+
+library(stringr)
+library(dplyr)
+library(fs)
+library(ggplot2)
+
+
+# Root-Ordner mit Unterordnern (Buch1, Buch2, ...)
+root_dir <- "C:/Mommsen_DH/R/Buch_kapitelweise"
+
+# Alle Kapiteldateien in Unterordnern finden
+files <- dir_ls(root_dir, recurse = TRUE, regexp = "\\.txt$")
+
+results <- data.frame(
+  Datei = character(),
+  Buch = character(),
+  Kapitel = character(),
+  Satzlaenge = numeric(),
+  Wortlaenge = numeric(),
+  Adjektivdichte = numeric(),
+  stringsAsFactors = FALSE
+)
+
+adjektiv_endungen <- c("ig", "isch", "lich", "haft", "bar", "sam", "los")
+
+for (f in files) {
+  text <- tolower(readLines(f, encoding = "UTF-8"))
+  text <- paste(text, collapse = " ")
+
+  saetze <- unlist(strsplit(text, "(?<=[.!?])", perl = TRUE))
+  woerter_pro_satz <- sapply(saetze, function(s) str_count(s, "\\b\\w+\\b"))
+  avg_sentence_length <- mean(woerter_pro_satz, na.rm = TRUE)
+
+  woerter <- unlist(str_extract_all(text, "\\b\\w+\\b"))
+  avg_word_length <- mean(nchar(woerter), na.rm = TRUE)
+
+  adjektive <- woerter[str_detect(woerter, paste0(adjektiv_endungen, collapse = "|"))]
+  adjektiv_density <- length(adjektive) / length(woerter)
+
+  results <- rbind(results, data.frame(
+    Datei = basename(f),
+    Buch = basename(dirname(f)),
+    Kapitel = tools::file_path_sans_ext(basename(f)),
+    Satzlaenge = avg_sentence_length,
+    Wortlaenge = avg_word_length,
+    Adjektivdichte = adjektiv_density
+  ))
+}
+
+# Ergebnisse speichern
+write.csv(results, "Mommsen_Stilmetriken_Kapitel.csv", row.names = FALSE)
+
+# =======================================
+# Grafische Auswertung
+# =======================================
+
+# Kapitelnummer aus Dateinamen extrahieren (falls z. B. "Kapitel01")
+results <- results %>%
+  mutate(Kapitel_Nr = as.numeric(str_extract(Kapitel, "\\d+"))) %>%
+  arrange(Buch, Kapitel_Nr)
+
+# 1️⃣ Trenddiagramm – Satzlänge pro Buch
+ggplot(results, aes(x = Kapitel_Nr, y = Satzlaenge, color = Buch, group = Buch)) +
+  geom_line(linewidth = 0.8) +
+  geom_point(size = 2) +
+  labs(
+    title = "Durchschnittliche Satzlänge pro Kapitel und Buch",
+    x = "Kapitelnummer",
+    y = "Ø Satzlänge (Wörter pro Satz)"
+  ) +
+  theme_minimal(base_size = 12)
+
+# 2️⃣ Trenddiagramm – Wortlänge
+ggplot(results, aes(x = Kapitel_Nr, y = Wortlaenge, color = Buch, group = Buch)) +
+  geom_line(linewidth = 0.8) +
+  geom_point(size = 2) +
+  labs(
+    title = "Durchschnittliche Wortlänge pro Kapitel und Buch",
+    x = "Kapitelnummer",
+    y = "Ø Wortlänge (Zeichen)"
+  ) +
+  theme_minimal(base_size = 12)
+
+# 3️⃣ Trenddiagramm – Adjektivdichte
+ggplot(results, aes(x = Kapitel_Nr, y = Adjektivdichte, color = Buch, group = Buch)) +
+  geom_line(linewidth = 0.8) +
+  geom_point(size = 2) +
+  labs(
+    title = "Adjektivdichte pro Kapitel und Buch",
+    x = "Kapitelnummer",
+    y = "Anteil Adjektive an Gesamtwörtern"
+  ) +
+  theme_minimal(base_size = 12)
+
+# Optional: gemittelte Übersicht pro Buch (für Buch-Ebene)
+buch_summary <- results %>%
+  group_by(Buch) %>%
+  summarise(
+    mean_Satzlaenge = mean(Satzlaenge, na.rm = TRUE),
+    mean_Wortlaenge = mean(Wortlaenge, na.rm = TRUE),
+    mean_Adjektivdichte = mean(Adjektivdichte, na.rm = TRUE)
+  )
+
+ggplot(buch_summary, aes(x = Buch, y = mean_Satzlaenge, fill = Buch)) +
+  geom_col() +
+  labs(title = "Mittlere Satzlänge nach Buch", x = "Buch", y = "Ø Satzlänge") +
+  theme_minimal(base_size = 12)
