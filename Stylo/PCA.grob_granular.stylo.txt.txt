@@ -1,0 +1,25 @@
+# =============================
+# Mommsen Stilometrie – Buch-Ebene
+# =============================
+
+library(stylo)
+
+# Arbeitsverzeichnis anpassen
+setwd("C:/Mommsen_DH/stylo/Buch")
+
+# Stilometrische Analyse (PCA + Cluster)
+stylo(
+  gui = FALSE,
+  corpus.dir = ".",                   # alle Buch-Dateien im Ordner
+  analysis.type = "CA",               # PCA / Correspondence Analysis
+  mfw.min = 100,                      # häufigste Wörter
+  mfw.max = 1000,
+  mfw.incr = 100,
+  distance.measure = "delta",         # Burrows’ Delta
+  sampling = "no.sampling",           # keine Chunk-Aufteilung
+  write.png.file = TRUE,              # PCA-Grafik speichern
+  plot.options = list(
+    title = "Mommsen – Bücher 1–5 vs. Band 8",
+    add.legends = TRUE
+  )
+)
